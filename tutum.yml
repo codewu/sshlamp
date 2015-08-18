@@ -1,0 +1,7 @@
+lamp:
+  image: tutum/ssh-lamp
+  ports:
+    - 80:80
+    - 3306:3306
+	- 22:22
+    
