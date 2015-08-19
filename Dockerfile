@@ -52,6 +52,6 @@ ENV AUTHORIZED_KEYS "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAmDjFuhYCpvWSXC4jdak+nU0
 # Add volumes for MySQL 
 VOLUME  ["/etc/mysql", "/var/lib/mysql" ]
 
-EXPOSE 80 3306 22
+EXPOSE 22 80 3306
 CMD ["/run.sh"]
 CMD ["/sshrun.sh"]
