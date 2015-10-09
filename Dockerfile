@@ -1,11 +1,19 @@
 FROM ubuntu:latest
 MAINTAINER CodyWu <codewu@gmail.com> based on lamp from tutum.co
 
-# Install packages
+# Install ssh packages
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y install openssh-server pwgen
+RUN mkdir -p /var/run/sshd && sed -i "s/UsePrivilegeSeparation.*/UsePrivilegeSeparation no/g" /etc/ssh/sshd_config && sed -i "s/UsePAM.*/UsePAM no/g" /etc/ssh/sshd_config && sed -i "s/PermitRootLogin.*/PermitRootLogin yes/g" /etc/ssh/sshd_config
+ADD set_root_pw.sh /set_root_pw.sh
+ADD run.sh /run.sh
+RUN chmod +x /*.sh
+
+#Install lamp packages
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && \
-  apt-get -y install supervisor git apache2 libapache2-mod-php5 mysql-server php5-mysql openssh-server pwgen php-apc php5-mcrypt && \
-  echo "ServerName localhost" >> /etc/apache2/apache2.conf
+apt-get -y install supervisor git apache2 libapache2-mod-php5 mysql-server php5-mysql pwgen php-apc php5-mcrypt && \
+echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
 
 # Add image configuration and scripts
 ADD start-apache2.sh /start-apache2.sh
