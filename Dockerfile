@@ -57,4 +57,3 @@ VOLUME  ["/etc/mysql", "/var/lib/mysql" ]
 
 EXPOSE 22 80 3306
 CMD ["/run.sh"]
-CMD ["/sshrun.sh"]
