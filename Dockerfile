@@ -1,4 +1,4 @@
-FROM ubuntu:trusty
+FROM ubuntu:latest
 MAINTAINER CodyWu <codewu@gmail.com> based on lamp from tutum.co
 
 # Install packages
