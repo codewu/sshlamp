@@ -33,8 +33,10 @@ RUN a2enmod rewrite
 RUN mkdir -p /var/run/sshd && sed -i "s/UsePrivilegeSeparation.*/UsePrivilegeSeparation no/g" /etc/ssh/sshd_config && sed -i "s/UsePAM.*/UsePAM no/g" /etc/ssh/sshd_config && sed -i "s/PermitRootLogin.*/PermitRootLogin yes/g" /etc/ssh/sshd_config
 
 # Configure /app folder with sample app
-RUN git clone https://github.com/fermayo/hello-world-lamp.git /app
+#RUN git clone https://github.com/fermayo/hello-world-lamp.git /app
+RUN git clone https://git.oschina.net/crackgame/wms.git /app
 RUN mkdir -p /app && rm -fr /var/www/html && ln -s /app /var/www/html
+RUN chmod 777 -R /app
 
 #Enviornment variables to configure php
 ENV PHP_UPLOAD_MAX_FILESIZE 10M
