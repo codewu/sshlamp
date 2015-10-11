@@ -1,11 +1,19 @@
-FROM ubuntu:trusty
+FROM ubuntu:latest
 MAINTAINER CodyWu <codewu@gmail.com> based on lamp from tutum.co
 
-# Install packages
+# Install ssh packages
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y install openssh-server pwgen
+RUN mkdir -p /var/run/sshd && sed -i "s/UsePrivilegeSeparation.*/UsePrivilegeSeparation no/g" /etc/ssh/sshd_config && sed -i "s/UsePAM.*/UsePAM no/g" /etc/ssh/sshd_config && sed -i "s/PermitRootLogin.*/PermitRootLogin yes/g" /etc/ssh/sshd_config
+ADD set_root_pw.sh /set_root_pw.sh
+ADD run.sh /run.sh
+RUN chmod +x /*.sh
+
+#Install lamp packages
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && \
-  apt-get -y install supervisor git apache2 libapache2-mod-php5 mysql-server php5-mysql pwgen php-apc php5-mcrypt && \
-  echo "ServerName localhost" >> /etc/apache2/apache2.conf
+apt-get -y install supervisor git apache2 libapache2-mod-php5 mysql-server php5-mysql pwgen php-apc php5-mcrypt && \
+echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
 
 # Add image configuration and scripts
 ADD start-apache2.sh /start-apache2.sh
@@ -29,16 +37,23 @@ ADD apache_default /etc/apache2/sites-available/000-default.conf
 RUN a2enmod rewrite
 
 # Install openssh packages
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y install openssh-server pwgen
+#RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y install openssh-server pwgen
 RUN mkdir -p /var/run/sshd && sed -i "s/UsePrivilegeSeparation.*/UsePrivilegeSeparation no/g" /etc/ssh/sshd_config && sed -i "s/UsePAM.*/UsePAM no/g" /etc/ssh/sshd_config && sed -i "s/PermitRootLogin.*/PermitRootLogin yes/g" /etc/ssh/sshd_config
 
+<<<<<<< HEAD
 
 
 # Configure /app folder with sample app
 RUN git clone https://github.com/fermayo/hello-world-lamp.git /app
 RUN git clone https://git.oschina.net/crackgame/wms.git /app/wms
 RUN git clone https://github.com/phpmyadmin/phpmyadmin.git /app/phpMyAdmin
+=======
+# Configure /app folder with sample app
+#RUN git clone https://github.com/fermayo/hello-world-lamp.git /app
+RUN git clone https://git.oschina.net/crackgame/wms.git /app
+>>>>>>> origin/master
 RUN mkdir -p /app && rm -fr /var/www/html && ln -s /app /var/www/html
+RUN chmod 777 -R /app
 
 #Enviornment variables to configure php
 ENV PHP_UPLOAD_MAX_FILESIZE 10M
@@ -49,6 +64,5 @@ ENV AUTHORIZED_KEYS "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAmDjFuhYCpvWSXC4jdak+nU0
 # Add volumes for MySQL 
 VOLUME  ["/etc/mysql", "/var/lib/mysql" ]
 
-EXPOSE 80 3306 22
+EXPOSE 22 80 3306
 CMD ["/run.sh"]
-CMD ["/sshrun.sh"]
