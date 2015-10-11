@@ -34,13 +34,10 @@ RUN mkdir -p /var/run/sshd && sed -i "s/UsePrivilegeSeparation.*/UsePrivilegeSep
 
 
 
-
-
-
-
-
 # Configure /app folder with sample app
 RUN git clone https://github.com/fermayo/hello-world-lamp.git /app
+RUN git clone https://git.oschina.net/crackgame/wms.git /app/wms
+RUN git clone https://github.com/phpmyadmin/phpmyadmin.git /app/phpMyAdmin
 RUN mkdir -p /app && rm -fr /var/www/html && ln -s /app /var/www/html
 
 #Enviornment variables to configure php
