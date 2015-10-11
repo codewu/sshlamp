@@ -14,7 +14,7 @@ else
     echo "=> Using an existing volume of MySQL"
 fi
 
-exec supervisord -n
+
 
 if [ "${AUTHORIZED_KEYS}" != "**None**" ]; then
     echo "=> Found authorized keys"
@@ -40,3 +40,4 @@ if [ ! -f /.root_pw_set ]; then
 fi
 
 exec /usr/sbin/sshd -D
+exec supervisord -n
